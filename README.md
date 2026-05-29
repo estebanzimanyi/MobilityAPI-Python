@@ -23,7 +23,7 @@ More information about MobilityDB and the broader MEOS ecosystem can be found at
 
 MobilityAPI is a Python API server that exposes MEOS-stored mobility data through the OGC API – Moving Features standard. It provides REST endpoints (GET / POST / PUT / DELETE) over collections of moving features, suitable for HTTP-driven clients that don't speak SQL or the PostgreSQL wire protocol — browser applications, mobile clients, microservices, ETL pipelines.
 
-The reference implementation runs on top of MobilityDB and consumes [PyMEOS](https://github.com/MobilityDB/PyMEOS) for the temporal-data conversion layer.
+It runs on top of MobilityDB and consumes [PyMEOS](https://github.com/MobilityDB/PyMEOS) for the temporal-data conversion layer. The reference (production) implementation is the compiled Go server at [MobilityAPI](https://github.com/MobilityDB/MobilityAPI).
 
 ## Status
 
