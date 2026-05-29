@@ -39,3 +39,16 @@ jobs:
           python -c "from resource.collections import Create, Retrieve"
           python -c "from resource.moving_features import Create, Retrieve"
           python -c "from resource.temporal_geom_query import distance, velocity, acceleration"
+
+  unit-tests:
+    name: Unit tests (PyMEOS-free)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install test dependencies
+        run: pip install pytest pyarrow
+      - name: Run unit tests
+        run: python -m pytest tests/test_bulk.py -v
