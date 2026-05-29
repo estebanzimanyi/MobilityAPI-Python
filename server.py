@@ -18,6 +18,7 @@ from resource.moving_feature.Retrieve import get_movement_single_moving_feature
 from resource.moving_feature.Delete import delete_single_moving_feature
 from resource.temporal_geom_seq.Retrieve import get_tgsequence
 from resource.temporal_geom_seq.Create import post_tgsequence
+from resource.bulk.Create import post_bulk
 from resource.temporal_prim_geom.Delete import delete_single_temporal_primitive_geo
 # 
 from resource.temporal_properties.Retrieve import get_tproperties
@@ -154,6 +155,11 @@ class MyServer(BaseHTTPRequestHandler):
         elif self.path == '/collections':
             self.post_collections(connection, cursor)
         
+        # ============================================ BULK INGEST (extension) ====================================================
+        elif self.path.startswith('/collections/') and self.path.endswith('/bulk'):
+            collection_id = self.path.split('/')[2]
+            self.post_bulk(collection_id, connection, cursor)
+
         # ================================================ MOVING FEATURES ========================================================
         elif '/items' in self.path and self.path.startswith('/collections/'):
             collection_id = self.path.split('/')[2]
@@ -288,6 +294,9 @@ class MyServer(BaseHTTPRequestHandler):
     #Post:
     def post_tgsequence(self,connection, cursor):
         post_tgsequence(self, connection, cursor)
+
+    def post_bulk(self, collection_id, connection, cursor):
+        post_bulk(self, collection_id, connection, cursor)
         
 ## Resource Temporal Geometry Query
     #Get
