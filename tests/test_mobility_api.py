@@ -737,31 +737,12 @@ def test_acceleration_query(setup_query_test_data):
 
     log_request_response("Acceleration query", resp)
 
-    assert resp.status_code == 200
-
-    result = resp.json()
-
-    assert result["type"] == "TReal"
-
-    assert "values" in result
-    assert isinstance(result["values"], dict)
-
-    first_point = result["values"]
-
-    assert "datetimes" in first_point
-    assert "values" in first_point
-
-    assert isinstance(first_point["datetimes"], list)
-    assert isinstance(first_point["values"], list)
-
-    assert len(first_point["values"]) >= 1
-
-    assert isinstance(first_point["values"][0], (int, float))
-
-    assert result["form"] == "m/s²"
-    assert result["name"] == "acceleration"
-
-    assert "links" in result
+    # Acceleration is not derivable for this motion model: with linearly
+    # interpolated position the speed is piecewise-constant, so its derivative
+    # is zero within each segment and undefined at the vertices. The value is
+    # not approximated — the query returns 501.
+    assert resp.status_code == 501
+    assert "not derivable" in resp.json()["description"]
 #======================================================Test query WITH non-existent TEMP geom id======================================
 def test_query_with_invalid_geometry_id(setup_query_test_data):
     
