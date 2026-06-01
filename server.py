@@ -29,15 +29,27 @@ from resource.temporal_prim_value.Delete import delete_temporal_primitive_value
 from resource.temporal_geom_query.distance import get_distance
 from resource.temporal_geom_query.velocity import get_velocity
 from resource.temporal_geom_query.acceleration import get_acceleration
+import json
+import os
 import psycopg2
 
-hostName = "localhost"
-serverPort = 8080
-host = 'localhost'
-port = 25431
-db = 'postgres'
-user = 'postgres'
-password = 'mysecretpassword'
+# Connection and listen settings come from config.json (next to this file);
+# environment variables of the same name override individual entries.
+with open(os.path.join(os.path.dirname(__file__), "config.json")) as _f:
+    _cfg = json.load(_f)
+
+
+def _setting(key, default):
+    return os.environ.get(key, _cfg.get(key, default))
+
+
+hostName = _setting("API_HOST", "localhost")
+serverPort = int(_setting("API_PORT", 8080))
+host = _setting("DB_HOST", "localhost")
+port = int(_setting("DB_PORT", 5432))
+db = _setting("DB_NAME", "postgres")
+user = _setting("DB_USER", "postgres")
+password = _setting("DB_PASS", "")
 
 connection = psycopg2.connect(
     host=host, port=port, database=db, user=user, password=password)
