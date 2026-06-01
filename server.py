@@ -9,6 +9,7 @@ from urllib.parse import urlparse, parse_qs
 from resource.collections.Create import post_collections
 from resource.collections.Retrieve import get_collections
 from resource.collection.Retrieve import get_collection_id
+from resource.collection.Export import export_collection
 from resource.collection.Delete import delete_collection
 from resource.collection.Replace import put_collection
 from resource.moving_features.Create import post_collection_items, insert_feature
@@ -143,7 +144,13 @@ class MyServer(BaseHTTPRequestHandler):
         elif self.path == '/collections':
             self.get_collections(connection, cursor)
             return
-        
+
+        # /collections/{collectionId}/export — lakehouse NDJSON feed
+        elif self.path.startswith('/collections/') and urlparse(self.path).path.endswith('/export'):
+            collection_id = urlparse(self.path).path.split('/')[2]
+            self.export_collection(collection_id, connection, cursor)
+            return
+
         # /collections/{collectionId}
         elif self.path.startswith('/collections/'):
             path_only = urlparse(self.path).path
@@ -377,6 +384,9 @@ class MyServer(BaseHTTPRequestHandler):
 
     def put_single_moving_feature(self, collectionId, mFeature_id, connection, cursor):
         put_single_moving_feature(self, collectionId, mFeature_id, connection, cursor)
+
+    def export_collection(self, collection_id, connection, cursor):
+        export_collection(self, collection_id, connection, cursor)
 
 
 ## Resource Temporal Geometry Sequence
