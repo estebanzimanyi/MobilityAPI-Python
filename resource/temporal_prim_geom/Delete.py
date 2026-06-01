@@ -47,16 +47,11 @@ def delete_single_temporal_primitive_geo(self, collection_id, feature_id, geomet
             self.handle_error(409, "the feature has a single temporal geometry; delete the feature to remove it")
             return
         #----------------------------------------------------------------------------------------------------------------------
-        # Remove the member sequence by rebuilding the sequence set from the kept
-        # members. deleteTime is not used here: its gap-fill semantics reconnect
-        # the surviving fragments into a single sequence, whereas deleting a
-        # temporal primitive geometry must leave the other members distinct.
+        # Remove the member by deleting its time span; deleteTime drops a whole
+        # composing sequence and keeps the other members distinct.
         cursor.execute(
-            """UPDATE temporal_geometries SET trajectory = (
-                   SELECT merge(seq)
-                   FROM unnest(sequences(trajectory)) WITH ORDINALITY AS u(seq, ord)
-                   WHERE ord <> %s
-               )
+            """UPDATE temporal_geometries
+               SET trajectory = deleteTime(trajectory, getTime(sequenceN(trajectory, %s)))
                WHERE feature_id = %s AND collection_id = %s
             """, (member, feature_id, collection_id)
         )
