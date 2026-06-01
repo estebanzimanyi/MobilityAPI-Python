@@ -120,8 +120,13 @@ def validate_collection_data(data, is_update=False):
         if "title" not in data:
             errors.append("Missing required field: title")
         else:
-            validated["title"] = data["title"] 
-            validated["id"] = data["title"].lower().replace(" ", "_")
+            validated["title"] = data["title"]
+            # Honour a client-supplied id; otherwise derive one from the title.
+            provided = data.get("id")
+            if isinstance(provided, str) and provided.strip():
+                validated["id"] = provided.strip().lower().replace(" ", "_")
+            else:
+                validated["id"] = data["title"].lower().replace(" ", "_")
     else: # Replace aka Put operation:
         if "title" in data:
             validated["title"] = data["title"]
