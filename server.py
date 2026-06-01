@@ -15,6 +15,7 @@ from resource.moving_features.Create import post_collection_items, insert_featur
 from resource.moving_features.Retrieve import get_collection_items
 from resource.moving_feature.Retrieve import get_movement_single_moving_feature
 from resource.moving_feature.Delete import delete_single_moving_feature
+from resource.moving_feature.Replace import put_single_moving_feature
 from resource.temporal_geom_seq.Retrieve import get_tgsequence
 from resource.temporal_geom_seq.Create import post_tgsequence
 from resource.bulk.Create import post_bulk
@@ -242,8 +243,12 @@ class MyServer(BaseHTTPRequestHandler):
 
 
     def do_PUT(self):
+        # PUT /collections/{collectionId}/items/{mFeatureId} — replace a feature
+        if self.path.startswith('/collections/') and '/items/' in self.path and len(self.path.split('/')) == 5:
+            parts = self.path.split('/')
+            self.put_single_moving_feature(parts[2], parts[4], connection, cursor)
         #===================================================PUT collection========================================
-        if self.path.startswith('/collections/'):
+        elif self.path.startswith('/collections/'):
             collection_id = self.path.split('/')[-1]
             self.put_collection(collection_id, connection, cursor)
 
@@ -369,6 +374,9 @@ class MyServer(BaseHTTPRequestHandler):
     #Delete
     def delete_single_moving_feature(self, collectionId, mFeature_id, connection, cursor):
         delete_single_moving_feature(self, collectionId, mFeature_id, connection, cursor)
+
+    def put_single_moving_feature(self, collectionId, mFeature_id, connection, cursor):
+        put_single_moving_feature(self, collectionId, mFeature_id, connection, cursor)
 
 
 ## Resource Temporal Geometry Sequence
