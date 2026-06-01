@@ -27,7 +27,6 @@ from resource.temporal_properties.Create import post_tproperties
 from resource.temporal_property.Retrieve import get_temporal_property
 from resource.temporal_property.Create import post_temporal_property
 from resource.temporal_property.Delete import delete_temporal_property
-from resource.temporal_prim_value.Delete import delete_temporal_primitive_value
 from resource.temporal_geom_query.distance import get_distance
 from resource.temporal_geom_query.velocity import get_velocity
 from resource.temporal_geom_query.acceleration import get_acceleration
@@ -231,15 +230,6 @@ class MyServer(BaseHTTPRequestHandler):
             collection_id = components[2]
             mFeature_id = components[4]
             self.delete_single_moving_feature(collection_id, mFeature_id, connection, cursor)
-        #========================================================Delete Temporal Property value=================================================
- #   delete /collections/{collectionId}/items/{mFeatureId}/tproperties/{tPropertyName}/{tValueId}
-        elif "/tproperties/" in self.path and len(self.path.split('/')) == 8:
-            parts = self.path.split('/')
-            collectionId = parts[2]
-            featureId = parts[4]
-            propertyName = parts[6]
-            tValueId = parts[7]
-            self.delete_temporal_primitive_value(collectionId, featureId, propertyName, tValueId, connection, cursor)
         #============================================================# DELETE temporal property=======================================
         elif "/tproperties/" in self.path:
             parts = self.path.split('/')
@@ -447,10 +437,6 @@ class MyServer(BaseHTTPRequestHandler):
     # Delete property
     def delete_temporal_property(self, collectionId, featureId, propertyName, connection, cursor):
         delete_temporal_property(self, collectionId, featureId, propertyName, connection, cursor)
-
-## Resource Temporal Primitive Value
-    def delete_temporal_primitive_value(self, collectionId, featureId, propertyName, tValueId, connection, cursor):
-        delete_temporal_primitive_value(self, collectionId, featureId, propertyName, tValueId, connection, cursor)
 
         
 
