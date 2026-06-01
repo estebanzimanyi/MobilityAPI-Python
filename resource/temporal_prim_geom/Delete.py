@@ -25,29 +25,40 @@ def delete_single_temporal_primitive_geo(self, collection_id, feature_id, geomet
         if cursor.fetchone() is None:
             self.handle_error(404, f"Feature '{feature_id}' not found")
             return
-        # geometry exists (by collection by mf) 
-        cursor.execute("""
-            SELECT tg.id 
-            FROM temporal_geometries tg
-            JOIN moving_features mf ON tg.feature_id = mf.id
-            WHERE tg.id = %s 
-              AND mf.id = %s 
-              AND mf.collection_id = %s
-        """, (geometry_id, feature_id, collection_id))
-        
-        if cursor.fetchone() is None:
+        # {geometry_id} is the 1-based index of a member sequence of the trajectory
+        try:
+            member = int(geometry_id)
+        except (TypeError, ValueError):
+            self.handle_error(400, "invalid temporal geometry id (1-based index into the sequence)")
+            return
+        cursor.execute(
+            "SELECT numSequences(trajectory) FROM temporal_geometries WHERE feature_id = %s AND collection_id = %s",
+            (feature_id, collection_id),
+        )
+        row = cursor.fetchone()
+        if row is None or row[0] is None:
             self.handle_error(404, f"Temporal geometry {geometry_id} not found")
             return
+        nseq = row[0]
+        if member < 1 or member > nseq:
+            self.handle_error(404, f"Temporal geometry {geometry_id} not found")
+            return
+        if nseq == 1:
+            self.handle_error(409, "the feature has a single temporal geometry; delete the feature to remove it")
+            return
         #----------------------------------------------------------------------------------------------------------------------
-        # delete
+        # Remove the member sequence by rebuilding the sequence set from the kept
+        # members (deleteTime on a tgeompoint is avoided — it crashes the backend).
         cursor.execute(
-            """DELETE FROM temporal_geometries tg 
-            WHERE tg.id = %s 
-              AND tg.feature_id = %s 
-              AND tg.collection_id = %s
-        """, (geometry_id, feature_id, collection_id)
+            """UPDATE temporal_geometries SET trajectory = (
+                   SELECT merge(seq)
+                   FROM unnest(sequences(trajectory)) WITH ORDINALITY AS u(seq, ord)
+                   WHERE ord <> %s
+               )
+               WHERE feature_id = %s AND collection_id = %s
+            """, (member, feature_id, collection_id)
         )
-        
+
         connection.commit()
         
         # response Req 31)

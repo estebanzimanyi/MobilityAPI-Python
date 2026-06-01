@@ -28,12 +28,17 @@ def get_distance(self, collection_id, feature_id, geometry_id, connection, curso
             self.handle_error(404, f"Feature '{feature_id}' not found in collection '{collection_id}'")
             return
         
-        #geometry exists for feature
+        # {geometry_id} is the 1-based index of a member sequence of the trajectory
+        try:
+            member = int(geometry_id)
+        except (TypeError, ValueError):
+            self.handle_error(400, "invalid temporal geometry id (1-based index into the sequence)")
+            return
         cursor.execute("""
-            SELECT id FROM temporal_geometries 
-            WHERE id = %s AND feature_id = %s and collection_id = %s
-        """, (geometry_id, feature_id, collection_id))
-        
+            SELECT 1 FROM temporal_geometries
+            WHERE feature_id = %s AND collection_id = %s
+              AND %s BETWEEN 1 AND numSequences(trajectory)
+        """, (feature_id, collection_id, member))
         if cursor.fetchone() is None:
             self.handle_error(404, f"Temporal geometry '{geometry_id}' not found for feature '{feature_id}'")
             return
@@ -41,12 +46,12 @@ def get_distance(self, collection_id, feature_id, geometry_id, connection, curso
 
 # API returns derived time-to-distance curve data from all available time of the specified TemporalPrimitiveGeometry object ref ogc p65
         cursor.execute("""
-            SELECT 
-            getTimestamp(unnest(instants(round(cumulativeLength(trajectory),6)))) as time,
-            getValue(unnest(instants(round(cumulativeLength(trajectory),6)))) as distance
+            SELECT
+            getTimestamp(unnest(instants(round(cumulativeLength(sequenceN(trajectory, %s)),6)))) as time,
+            getValue(unnest(instants(round(cumulativeLength(sequenceN(trajectory, %s)),6)))) as distance
             FROM temporal_geometries
-            WHERE id = %s AND feature_id = %s AND collection_id = %s
-        """, (geometry_id, feature_id, collection_id))
+            WHERE feature_id = %s AND collection_id = %s
+        """, (member, member, feature_id, collection_id))
         #eg t[0@08:00, 14.1@08:01, 27.1@08:02, 42.4@08:03] clean ?
         rows = cursor.fetchall()
         if not rows:

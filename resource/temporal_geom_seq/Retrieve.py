@@ -32,31 +32,35 @@ def get_tgsequence(self, connection, cursor):
             return
         # """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""":::
 
-        # Get temporal geometries for this feature
+        # The trajectory is a tgeompoint sequence set; each member sequence is one
+        # OGC temporal primitive geometry, addressed by its 1-based index
+        # (sequenceN / numSequences). Enumerate the members so the {tGeometryId}
+        # values are discoverable and a gap-separated trajectory exposes them all.
         cursor.execute("""
-            SELECT 
-                id,
-                geometry_type,
-                asMFJSON(trajectory) as trajectory,
-                interpolation,
-                base
-            FROM temporal_geometries
-            WHERE feature_id = %s and collection_id = %s
-            ORDER BY id
-        """, (feature_id,collection_id))
-        
+            SELECT
+                n,
+                tg.geometry_type,
+                asMFJSON(sequenceN(tg.trajectory, n)) AS member,
+                tg.interpolation,
+                tg.base
+            FROM temporal_geometries tg,
+                 generate_series(1, numSequences(tg.trajectory)) AS n
+            WHERE tg.feature_id = %s AND tg.collection_id = %s
+            ORDER BY n
+        """, (feature_id, collection_id))
+
         rows = cursor.fetchall()
-        
+
         geometries = []
-        for row in rows:
-            traj = json.loads(row[2]) if row[2] else {}
+        for n, gtype, member, interp, base in rows:
+            traj = json.loads(member) if member else {}
             geometries.append({
-                "id": row[0],
-                "type": row[1],
+                "id": n,
+                "type": gtype or "MovingPoint",
                 "datetimes": traj.get("datetimes", []),
                 "coordinates": traj.get("coordinates", []),
-                "interpolation": row[3],
-                "base": row[4]
+                "interpolation": interp,
+                "base": base
             })
         
         # ref Table 9 ogc 

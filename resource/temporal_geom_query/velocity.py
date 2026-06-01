@@ -28,24 +28,29 @@ def get_velocity(self, collection_id, feature_id, geometry_id, connection, curso
             self.handle_error(404, f"Feature '{feature_id}' not found in collection '{collection_id}'")
             return
         
-        #geometry exists for feature
+        # {geometry_id} is the 1-based index of a member sequence of the trajectory
+        try:
+            member = int(geometry_id)
+        except (TypeError, ValueError):
+            self.handle_error(400, "invalid temporal geometry id (1-based index into the sequence)")
+            return
         cursor.execute("""
-            SELECT id FROM temporal_geometries 
-            WHERE id = %s AND feature_id = %s AND collection_id = %s
-        """, (geometry_id, feature_id, collection_id))
-        
+            SELECT 1 FROM temporal_geometries
+            WHERE feature_id = %s AND collection_id = %s
+              AND %s BETWEEN 1 AND numSequences(trajectory)
+        """, (feature_id, collection_id, member))
         if cursor.fetchone() is None:
             self.handle_error(404, f"Temporal geometry '{geometry_id}' not found for feature '{feature_id}'")
             return
 ##############################################################################################################################
-#speed
+#speed of the addressed member sequence
         cursor.execute("""
-        SELECT 
-            getTimestamp(unnest(instants(speed(trajectory)))) as time,
-            getValue(unnest(instants(speed(trajectory)))) as speed
+        SELECT
+            getTimestamp(unnest(instants(speed(sequenceN(trajectory, %s))))) as time,
+            getValue(unnest(instants(speed(sequenceN(trajectory, %s))))) as speed
             FROM temporal_geometries
-            WHERE id = %s AND feature_id = %s AND collection_id = %s
-        """, (geometry_id, feature_id, collection_id))
+            WHERE feature_id = %s AND collection_id = %s
+        """, (member, member, feature_id, collection_id))
         rows = cursor.fetchall()
                 
         if not rows:
