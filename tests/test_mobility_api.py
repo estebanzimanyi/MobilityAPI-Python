@@ -986,19 +986,36 @@ def test_get_temporal_property_with_datetime(setup_property_test_data):
 
 def test_get_temporal_property_with_subtemporal(setup_property_test_data):
     data = setup_property_test_data
+    # Store a TReal property with values spanning the window so this test owns its
+    # data and does not depend on another test's ordering.
+    requests.post(
+        f"{HOST}/collections/{data['collection_id']}/items/{data['feature_id']}/tproperties",
+        json={
+            "datetimes": [
+                "2024-03-01T00:00:00Z", "2024-03-01T00:15:00Z", "2024-03-01T00:30:00Z",
+                "2024-03-01T00:45:00Z", "2024-03-01T01:00:00Z",
+            ],
+            "subspeed": {"type": "TReal", "form": "KMH",
+                         "values": [10.0, 20.0, 30.0, 40.0, 50.0], "interpolation": "Linear"},
+        },
+    )
     interval = urllib.parse.quote("2024-03-01T00:15:00Z/2024-03-01T00:45:00Z")
     resp = requests.get(
-        f"{HOST}/collections/{data['collection_id']}/items/{data['feature_id']}/tproperties/speed?subTemporalValue=true&datetime={interval}"
+        f"{HOST}/collections/{data['collection_id']}/items/{data['feature_id']}/tproperties/subspeed?subTemporalValue=true&datetime={interval}"
     )
     log_request_response("Get temporal property with subTemporalValue", resp)
     assert resp.status_code == 200
     result = resp.json()
     assert "temporalProperties" in result
     assert len(result["temporalProperties"]) > 0
+    # Compare timezone-aware datetimes (the server returns its local offset), not
+    # ISO strings, so the window check is correct regardless of the offset.
+    lo = datetime.fromisoformat("2024-03-01T00:15:00+00:00")
+    hi = datetime.fromisoformat("2024-03-01T00:45:00+00:00")
     for segment in result["temporalProperties"]:
         for dt_str in segment["datetimes"]:
-            dt = datetime.fromisoformat(dt_str.replace('Z', '+00:00'))
-            assert "2024-03-01T00:15:00Z" <= dt.isoformat() <= "2024-03-01T00:45:00Z"
+            dt = datetime.fromisoformat(dt_str.replace("Z", "+00:00"))
+            assert lo <= dt <= hi
 #============================================================DELETE /collections/{id}/items/{fid}/tproperties/{name}===========================
 def test_delete_temporal_property(setup_property_test_data):
     
