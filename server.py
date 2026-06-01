@@ -150,11 +150,26 @@ class MyServer(BaseHTTPRequestHandler):
             self.get_collection_id(collection_id, connection, cursor)
             return
 
+        # /health
+        elif self.path == '/health':
+            send_json_response(self, 200, {"status": "ok"})
+            return
+
+        # /conformance
+        elif self.path == '/conformance':
+            self.do_conformance()
+            return
+
+        # /api (OpenAPI service description)
+        elif self.path == '/api':
+            self.do_api()
+            return
+
         # / (home)
         elif self.path == '/':
             self.do_home()
             return
-    
+
     def do_POST(self):
         # ==================================================== TEMPORAL PROPERTIES ========================================================
         # /collections/{collectionId}/items/{mFeatureId}/tproperties
@@ -239,6 +254,47 @@ class MyServer(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(
             bytes("<html><head></head><p>Request: This is the base route of the pyApi</p>body></body></html>", "utf-8"))
+
+    def do_conformance(self):
+        send_json_response(self, 200, {"conformsTo": [
+            "http://www.opengis.net/spec/ogcapi-movingfeatures-1/1.0/conf/common",
+            "http://www.opengis.net/spec/ogcapi-movingfeatures-1/1.0/conf/mf-collection",
+            "http://www.opengis.net/spec/ogcapi-movingfeatures-1/1.0/conf/movingfeatures",
+            "http://www.opengis.net/spec/ogcapi-common-1/1.0/conf/core",
+            "http://www.opengis.net/spec/ogcapi-common-2/1.0/conf/collections",
+        ]})
+
+    def do_api(self):
+        def op(summary):
+            return {"summary": summary, "responses": {"200": {"description": "OK"}}}
+
+        send_json_response(self, 200, {
+            "openapi": "3.0.3",
+            "info": {"title": "MobilityAPI", "version": "1.0.0",
+                     "description": "OGC API – Moving Features over MobilityDB (PyMEOS)"},
+            "paths": {
+                "/": {"get": op("Landing page")},
+                "/api": {"get": op("API definition")},
+                "/conformance": {"get": op("Conformance declaration")},
+                "/collections": {"get": op("Collections"), "post": op("Register a collection")},
+                "/collections/{collectionId}": {"get": op("Collection metadata"),
+                                                "put": op("Replace collection"),
+                                                "delete": op("Delete collection")},
+                "/collections/{collectionId}/items": {"get": op("Moving features"),
+                                                      "post": op("Insert a moving feature")},
+                "/collections/{collectionId}/items/{mFeatureId}": {"get": op("A moving feature"),
+                                                                   "delete": op("Delete feature")},
+                "/collections/{collectionId}/items/{mFeatureId}/tgsequence": {"get": op("Temporal geometry (MF-JSON)"),
+                                                                              "post": op("Append a sub-trajectory")},
+                "/collections/{collectionId}/items/{mFeatureId}/tgsequence/{tGeometryId}/{query}":
+                    {"get": op("Derived query: distance | velocity (acceleration → 501)")},
+                "/collections/{collectionId}/items/{mFeatureId}/tproperties": {"get": op("Temporal properties"),
+                                                                              "post": op("Add temporal properties")},
+                "/collections/{collectionId}/items/{mFeatureId}/tproperties/{tPropertyName}":
+                    {"get": op("A temporal property"), "post": op("Append values"), "delete": op("Delete property")},
+                "/collections/{collectionId}/bulk": {"post": op("Bulk ingest (extension): GeoJSON / GeoParquet fleet feed")},
+            },
+        })
 
 
 # ________________________________Class Moving Feature Collection_______________________________
