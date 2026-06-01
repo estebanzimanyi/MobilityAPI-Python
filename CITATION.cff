@@ -1,0 +1,49 @@
+cff-version: 1.2.0
+title: MobilityAPI
+type: software
+message: "If you use MobilityAPI in academic or technical work, please cite it using the metadata below."
+abstract: >-
+  MobilityAPI is an OGC API – Moving Features Standard reference
+  implementation for MEOS-stored mobility data. It provides REST
+  endpoints (GET / POST / PUT / DELETE) over collections of moving
+  features, suitable for HTTP-driven clients consuming MobilityDB
+  trajectories.
+
+authors:
+  - family-names: Meraoui
+    given-names: Sirine
+    affiliation: Université libre de Bruxelles (ULB)
+
+repository-code: "https://github.com/MobilityDB/MobilityAPI"
+url: "https://libmeos.org/bindings/mobilityapi/"
+
+keywords:
+  - mobility
+  - trajectory
+  - ogc-api
+  - moving-features
+  - mobilitydb
+  - meos
+  - rest-api
+
+license: PostgreSQL
+
+references:
+  - type: software
+    title: pg_mfserv
+    abstract: >-
+      Founding OGC API – Moving Features Python server for
+      MobilityDB. The initial implementation that MobilityAPI
+      extends.
+    authors:
+      - family-names: Schoemans
+        given-names: Maxime
+        affiliation: Université libre de Bruxelles (ULB)
+      - family-names: Morabito
+        given-names: Victor
+        affiliation: Université libre de Bruxelles (ULB)
+    repository-code: "https://github.com/MobilityDB/pg_mfserv"
+    notes: >-
+      Predecessor implementation; archived at
+      MobilityDB/pg_mfserv. MobilityAPI builds on its OGC endpoint
+      design and PyMEOS integration pattern.
