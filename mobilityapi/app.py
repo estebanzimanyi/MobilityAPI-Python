@@ -18,7 +18,7 @@ from __future__ import annotations
 from fastapi import FastAPI
 
 from .dispatcher import Dispatcher
-from .routers import catalog, functions
+from .routers import catalog, functions, movfeat
 from .wire import WireCodec
 
 
@@ -26,6 +26,7 @@ def create_app(
     dispatcher: Dispatcher,
     codec: WireCodec,
     *,
+    feature_store: object | None = None,
     title: str = "MobilityAPI",
     version: str = "0.1.0",
 ) -> FastAPI:
@@ -52,8 +53,10 @@ def create_app(
     )
     app.state.dispatcher = dispatcher
     app.state.codec = codec
+    app.state.feature_store = feature_store
 
     app.include_router(catalog.router, prefix="/catalog", tags=["catalog"])
     app.include_router(functions.router, prefix="/functions", tags=["functions"])
+    app.include_router(movfeat.router, tags=["movingfeatures"])
 
     return app
