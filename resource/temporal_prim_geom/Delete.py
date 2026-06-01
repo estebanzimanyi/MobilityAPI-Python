@@ -48,7 +48,9 @@ def delete_single_temporal_primitive_geo(self, collection_id, feature_id, geomet
             return
         #----------------------------------------------------------------------------------------------------------------------
         # Remove the member sequence by rebuilding the sequence set from the kept
-        # members (deleteTime on a tgeompoint is avoided — it crashes the backend).
+        # members. deleteTime is not used here: its gap-fill semantics reconnect
+        # the surviving fragments into a single sequence, whereas deleting a
+        # temporal primitive geometry must leave the other members distinct.
         cursor.execute(
             """UPDATE temporal_geometries SET trajectory = (
                    SELECT merge(seq)
