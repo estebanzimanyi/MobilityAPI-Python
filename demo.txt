@@ -1,0 +1,38 @@
+
+
+
+COLLECTIONS:
+
+http://localhost:8080/collections
+
+
+SINGLE COLLECTION:
+
+http://localhost:8080/collections/ships
+
+MOVING FEATURES:
+
+http://localhost:8080/collections/ships/items?limit=50
+
+
+BBOX:
+
+http://localhost:8080/collections/ships/items?bbox=651135,6058230,651422,6058548
+
+
+TEMPOREAL GEOM SEQUENCE:
+
+http://localhost:8080/collections/ships/items/209168000/tgsequence
+
+
+VELOCITY , YOU CAN ALSO TRY DISTANCE:
+
+http://localhost:8080/collections/ships/items/210543000/tgsequence/2611/velocity
+
+
+SUBTRAJECTORY:
+http://localhost:8080/collections/ships/items?subTrajectory=true&datetime=2024-08-07T10%3A30%3A00%2B00%2F2024-08-07T11%3A30%3A00%2B00
+
+
+
+
