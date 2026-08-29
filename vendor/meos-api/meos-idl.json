@@ -129702,6 +129702,72 @@
       }
     },
     {
+      "name": "basetype_in",
+      "file": "meos_internal.h",
+      "family": "CORE",
+      "returnType": {
+        "c": "bool",
+        "canonical": "bool"
+      },
+      "params": [
+        {
+          "name": "str",
+          "cType": "const char *",
+          "canonical": "const char *"
+        },
+        {
+          "name": "type",
+          "cType": "MeosType",
+          "canonical": "MeosType"
+        },
+        {
+          "name": "end",
+          "cType": "bool",
+          "canonical": "bool"
+        },
+        {
+          "name": "result",
+          "cType": "Datum *",
+          "canonical": "Datum *"
+        }
+      ],
+      "api": "internal",
+      "category": "io",
+      "network": {
+        "exposable": false,
+        "method": null,
+        "reason": "internal; no-decoder:Datum"
+      },
+      "wire": {
+        "params": [
+          {
+            "name": "str",
+            "kind": "json",
+            "json": "string"
+          },
+          {
+            "name": "type",
+            "kind": "json",
+            "json": "string",
+            "enum": "MeosType"
+          },
+          {
+            "name": "end",
+            "kind": "json",
+            "json": "boolean"
+          },
+          {
+            "name": "result",
+            "kind": "unsupported"
+          }
+        ],
+        "result": {
+          "kind": "json",
+          "json": "boolean"
+        }
+      }
+    },
+    {
       "name": "datum_ceil",
       "file": "meos_internal.h",
       "family": "CORE",
@@ -186986,6 +187052,212 @@
       }
     },
     {
+      "name": "h3index_get_resolution",
+      "file": "meos_h3.h",
+      "family": "H3",
+      "returnType": {
+        "c": "uint32_t",
+        "canonical": "uint32_t"
+      },
+      "params": [
+        {
+          "name": "cell",
+          "cType": "uint64_t",
+          "canonical": "uint64_t"
+        }
+      ],
+      "api": "internal",
+      "category": "accessor",
+      "network": {
+        "exposable": false,
+        "method": null,
+        "reason": "internal; no-decoder:uint64_t; unsupported-return:uint32_t"
+      },
+      "wire": {
+        "params": [
+          {
+            "name": "cell",
+            "kind": "unsupported"
+          }
+        ],
+        "result": {
+          "kind": "unsupported"
+        }
+      }
+    },
+    {
+      "name": "h3index_cell_to_parent",
+      "file": "meos_h3.h",
+      "family": "H3",
+      "returnType": {
+        "c": "uint64_t",
+        "canonical": "uint64_t"
+      },
+      "params": [
+        {
+          "name": "cell",
+          "cType": "uint64_t",
+          "canonical": "uint64_t"
+        },
+        {
+          "name": "parent_resolution",
+          "cType": "uint32_t",
+          "canonical": "uint32_t"
+        }
+      ],
+      "api": "internal",
+      "category": "conversion",
+      "network": {
+        "exposable": false,
+        "method": null,
+        "reason": "internal; no-decoder:uint64_t; no-decoder:uint32_t; unsupported-return:uint64_t"
+      },
+      "wire": {
+        "params": [
+          {
+            "name": "cell",
+            "kind": "unsupported"
+          },
+          {
+            "name": "parent_resolution",
+            "kind": "unsupported"
+          }
+        ],
+        "result": {
+          "kind": "unsupported"
+        }
+      }
+    },
+    {
+      "name": "h3index_cell_to_point",
+      "file": "meos_h3.h",
+      "family": "H3",
+      "returnType": {
+        "c": "GSERIALIZED *",
+        "canonical": "GSERIALIZED *"
+      },
+      "params": [
+        {
+          "name": "cell",
+          "cType": "uint64_t",
+          "canonical": "uint64_t"
+        }
+      ],
+      "api": "internal",
+      "category": "conversion",
+      "network": {
+        "exposable": false,
+        "method": null,
+        "reason": "internal; no-decoder:uint64_t"
+      },
+      "wire": {
+        "params": [
+          {
+            "name": "cell",
+            "kind": "unsupported"
+          }
+        ],
+        "result": {
+          "kind": "serialized",
+          "cType": "GSERIALIZED *",
+          "encode": "geo_as_ewkt",
+          "encode_aux": [
+            {
+              "name": "precision",
+              "kind": "integer",
+              "default": 15
+            }
+          ],
+          "encodings": [
+            "mfjson",
+            "text"
+          ]
+        }
+      }
+    },
+    {
+      "name": "h3index_cell_to_boundary",
+      "file": "meos_h3.h",
+      "family": "H3",
+      "returnType": {
+        "c": "GSERIALIZED *",
+        "canonical": "GSERIALIZED *"
+      },
+      "params": [
+        {
+          "name": "cell",
+          "cType": "uint64_t",
+          "canonical": "uint64_t"
+        }
+      ],
+      "api": "internal",
+      "category": "conversion",
+      "network": {
+        "exposable": false,
+        "method": null,
+        "reason": "internal; no-decoder:uint64_t"
+      },
+      "wire": {
+        "params": [
+          {
+            "name": "cell",
+            "kind": "unsupported"
+          }
+        ],
+        "result": {
+          "kind": "serialized",
+          "cType": "GSERIALIZED *",
+          "encode": "geo_as_ewkt",
+          "encode_aux": [
+            {
+              "name": "precision",
+              "kind": "integer",
+              "default": 15
+            }
+          ],
+          "encodings": [
+            "mfjson",
+            "text"
+          ]
+        }
+      }
+    },
+    {
+      "name": "h3index_cell_area",
+      "file": "meos_h3.h",
+      "family": "H3",
+      "returnType": {
+        "c": "double",
+        "canonical": "double"
+      },
+      "params": [
+        {
+          "name": "cell",
+          "cType": "uint64_t",
+          "canonical": "uint64_t"
+        }
+      ],
+      "api": "internal",
+      "category": "transformation",
+      "network": {
+        "exposable": false,
+        "method": null,
+        "reason": "internal; no-decoder:uint64_t"
+      },
+      "wire": {
+        "params": [
+          {
+            "name": "cell",
+            "kind": "unsupported"
+          }
+        ],
+        "result": {
+          "kind": "json",
+          "json": "number"
+        }
+      }
+    },
+    {
       "name": "th3index_in",
       "file": "meos_h3.h",
       "family": "H3",
@@ -189646,6 +189918,53 @@
       }
     },
     {
+      "name": "h3index_to_set",
+      "file": "meos_h3.h",
+      "family": "H3",
+      "returnType": {
+        "c": "Set *",
+        "canonical": "struct Set *"
+      },
+      "params": [
+        {
+          "name": "cell",
+          "cType": "uint64_t",
+          "canonical": "uint64_t"
+        }
+      ],
+      "api": "internal",
+      "category": "conversion",
+      "network": {
+        "exposable": false,
+        "method": null,
+        "reason": "internal; no-decoder:uint64_t"
+      },
+      "wire": {
+        "params": [
+          {
+            "name": "cell",
+            "kind": "unsupported"
+          }
+        ],
+        "result": {
+          "kind": "serialized",
+          "cType": "struct Set *",
+          "encode": "set_out",
+          "encode_aux": [
+            {
+              "name": "maxdd",
+              "kind": "integer",
+              "default": 15
+            }
+          ],
+          "encodings": [
+            "text",
+            "wkb"
+          ]
+        }
+      }
+    },
+    {
       "name": "geo_to_h3index_cell",
       "file": "meos_h3.h",
       "family": "H3",
@@ -190765,7 +191084,7 @@
       }
     },
     {
-      "name": "th3index_cell_area_km2",
+      "name": "th3index_edge_length",
       "file": "meos_h3.h",
       "family": "H3",
       "returnType": {
@@ -190780,7 +191099,7 @@
         }
       ],
       "api": "internal",
-      "category": "transformation",
+      "category": "accessor",
       "network": {
         "exposable": false,
         "method": null,
@@ -190821,377 +191140,7 @@
       }
     },
     {
-      "name": "th3index_cell_area_rads2",
-      "file": "meos_h3.h",
-      "family": "H3",
-      "returnType": {
-        "c": "Temporal *",
-        "canonical": "struct Temporal *"
-      },
-      "params": [
-        {
-          "name": "temp",
-          "cType": "const Temporal *",
-          "canonical": "const struct Temporal *"
-        }
-      ],
-      "api": "internal",
-      "category": "transformation",
-      "network": {
-        "exposable": false,
-        "method": null,
-        "reason": "internal"
-      },
-      "wire": {
-        "params": [
-          {
-            "name": "temp",
-            "kind": "serialized",
-            "cType": "const struct Temporal *",
-            "decode": "tbigint_in",
-            "decode_aux": [],
-            "encodings": [
-              "mfjson",
-              "text",
-              "wkb"
-            ]
-          }
-        ],
-        "result": {
-          "kind": "serialized",
-          "cType": "struct Temporal *",
-          "encode": "temporal_out",
-          "encode_aux": [
-            {
-              "name": "maxdd",
-              "kind": "integer",
-              "default": 15
-            }
-          ],
-          "encodings": [
-            "mfjson",
-            "text",
-            "wkb"
-          ]
-        }
-      }
-    },
-    {
-      "name": "th3index_edge_length_km",
-      "file": "meos_h3.h",
-      "family": "H3",
-      "returnType": {
-        "c": "Temporal *",
-        "canonical": "struct Temporal *"
-      },
-      "params": [
-        {
-          "name": "temp",
-          "cType": "const Temporal *",
-          "canonical": "const struct Temporal *"
-        }
-      ],
-      "api": "internal",
-      "category": "transformation",
-      "network": {
-        "exposable": false,
-        "method": null,
-        "reason": "internal"
-      },
-      "wire": {
-        "params": [
-          {
-            "name": "temp",
-            "kind": "serialized",
-            "cType": "const struct Temporal *",
-            "decode": "tbigint_in",
-            "decode_aux": [],
-            "encodings": [
-              "mfjson",
-              "text",
-              "wkb"
-            ]
-          }
-        ],
-        "result": {
-          "kind": "serialized",
-          "cType": "struct Temporal *",
-          "encode": "temporal_out",
-          "encode_aux": [
-            {
-              "name": "maxdd",
-              "kind": "integer",
-              "default": 15
-            }
-          ],
-          "encodings": [
-            "mfjson",
-            "text",
-            "wkb"
-          ]
-        }
-      }
-    },
-    {
-      "name": "th3index_edge_length_m",
-      "file": "meos_h3.h",
-      "family": "H3",
-      "returnType": {
-        "c": "Temporal *",
-        "canonical": "struct Temporal *"
-      },
-      "params": [
-        {
-          "name": "temp",
-          "cType": "const Temporal *",
-          "canonical": "const struct Temporal *"
-        }
-      ],
-      "api": "internal",
-      "category": "transformation",
-      "network": {
-        "exposable": false,
-        "method": null,
-        "reason": "internal"
-      },
-      "wire": {
-        "params": [
-          {
-            "name": "temp",
-            "kind": "serialized",
-            "cType": "const struct Temporal *",
-            "decode": "tbigint_in",
-            "decode_aux": [],
-            "encodings": [
-              "mfjson",
-              "text",
-              "wkb"
-            ]
-          }
-        ],
-        "result": {
-          "kind": "serialized",
-          "cType": "struct Temporal *",
-          "encode": "temporal_out",
-          "encode_aux": [
-            {
-              "name": "maxdd",
-              "kind": "integer",
-              "default": 15
-            }
-          ],
-          "encodings": [
-            "mfjson",
-            "text",
-            "wkb"
-          ]
-        }
-      }
-    },
-    {
-      "name": "th3index_edge_length_rads",
-      "file": "meos_h3.h",
-      "family": "H3",
-      "returnType": {
-        "c": "Temporal *",
-        "canonical": "struct Temporal *"
-      },
-      "params": [
-        {
-          "name": "temp",
-          "cType": "const Temporal *",
-          "canonical": "const struct Temporal *"
-        }
-      ],
-      "api": "internal",
-      "category": "transformation",
-      "network": {
-        "exposable": false,
-        "method": null,
-        "reason": "internal"
-      },
-      "wire": {
-        "params": [
-          {
-            "name": "temp",
-            "kind": "serialized",
-            "cType": "const struct Temporal *",
-            "decode": "tbigint_in",
-            "decode_aux": [],
-            "encodings": [
-              "mfjson",
-              "text",
-              "wkb"
-            ]
-          }
-        ],
-        "result": {
-          "kind": "serialized",
-          "cType": "struct Temporal *",
-          "encode": "temporal_out",
-          "encode_aux": [
-            {
-              "name": "maxdd",
-              "kind": "integer",
-              "default": 15
-            }
-          ],
-          "encodings": [
-            "mfjson",
-            "text",
-            "wkb"
-          ]
-        }
-      }
-    },
-    {
-      "name": "tgeogpoint_great_circle_distance_km",
-      "file": "meos_h3.h",
-      "family": "H3",
-      "returnType": {
-        "c": "Temporal *",
-        "canonical": "struct Temporal *"
-      },
-      "params": [
-        {
-          "name": "a",
-          "cType": "const Temporal *",
-          "canonical": "const struct Temporal *"
-        },
-        {
-          "name": "b",
-          "cType": "const Temporal *",
-          "canonical": "const struct Temporal *"
-        }
-      ],
-      "api": "internal",
-      "category": "transformation",
-      "network": {
-        "exposable": false,
-        "method": null,
-        "reason": "internal"
-      },
-      "wire": {
-        "params": [
-          {
-            "name": "a",
-            "kind": "serialized",
-            "cType": "const struct Temporal *",
-            "decode": "tbigint_in",
-            "decode_aux": [],
-            "encodings": [
-              "mfjson",
-              "text",
-              "wkb"
-            ]
-          },
-          {
-            "name": "b",
-            "kind": "serialized",
-            "cType": "const struct Temporal *",
-            "decode": "tbigint_in",
-            "decode_aux": [],
-            "encodings": [
-              "mfjson",
-              "text",
-              "wkb"
-            ]
-          }
-        ],
-        "result": {
-          "kind": "serialized",
-          "cType": "struct Temporal *",
-          "encode": "temporal_out",
-          "encode_aux": [
-            {
-              "name": "maxdd",
-              "kind": "integer",
-              "default": 15
-            }
-          ],
-          "encodings": [
-            "mfjson",
-            "text",
-            "wkb"
-          ]
-        }
-      }
-    },
-    {
-      "name": "tgeogpoint_great_circle_distance_m",
-      "file": "meos_h3.h",
-      "family": "H3",
-      "returnType": {
-        "c": "Temporal *",
-        "canonical": "struct Temporal *"
-      },
-      "params": [
-        {
-          "name": "a",
-          "cType": "const Temporal *",
-          "canonical": "const struct Temporal *"
-        },
-        {
-          "name": "b",
-          "cType": "const Temporal *",
-          "canonical": "const struct Temporal *"
-        }
-      ],
-      "api": "internal",
-      "category": "transformation",
-      "network": {
-        "exposable": false,
-        "method": null,
-        "reason": "internal"
-      },
-      "wire": {
-        "params": [
-          {
-            "name": "a",
-            "kind": "serialized",
-            "cType": "const struct Temporal *",
-            "decode": "tbigint_in",
-            "decode_aux": [],
-            "encodings": [
-              "mfjson",
-              "text",
-              "wkb"
-            ]
-          },
-          {
-            "name": "b",
-            "kind": "serialized",
-            "cType": "const struct Temporal *",
-            "decode": "tbigint_in",
-            "decode_aux": [],
-            "encodings": [
-              "mfjson",
-              "text",
-              "wkb"
-            ]
-          }
-        ],
-        "result": {
-          "kind": "serialized",
-          "cType": "struct Temporal *",
-          "encode": "temporal_out",
-          "encode_aux": [
-            {
-              "name": "maxdd",
-              "kind": "integer",
-              "default": 15
-            }
-          ],
-          "encodings": [
-            "mfjson",
-            "text",
-            "wkb"
-          ]
-        }
-      }
-    },
-    {
-      "name": "tgeogpoint_great_circle_distance_rads",
+      "name": "tgeogpoint_great_circle_distance",
       "file": "meos_h3.h",
       "family": "H3",
       "returnType": {
@@ -192844,100 +192793,6 @@
         ],
         "result": {
           "kind": "void"
-        }
-      }
-    },
-    {
-      "name": "h3_cell_to_geompoint",
-      "file": "th3index_internal.h",
-      "family": "H3",
-      "returnType": {
-        "c": "GSERIALIZED *",
-        "canonical": "GSERIALIZED *"
-      },
-      "params": [
-        {
-          "name": "cell",
-          "cType": "uint64_t",
-          "canonical": "uint64_t"
-        }
-      ],
-      "api": "internal",
-      "category": "conversion",
-      "network": {
-        "exposable": false,
-        "method": null,
-        "reason": "internal; no-decoder:uint64_t"
-      },
-      "wire": {
-        "params": [
-          {
-            "name": "cell",
-            "kind": "unsupported"
-          }
-        ],
-        "result": {
-          "kind": "serialized",
-          "cType": "GSERIALIZED *",
-          "encode": "geo_as_ewkt",
-          "encode_aux": [
-            {
-              "name": "precision",
-              "kind": "integer",
-              "default": 15
-            }
-          ],
-          "encodings": [
-            "mfjson",
-            "text"
-          ]
-        }
-      }
-    },
-    {
-      "name": "h3_cell_to_geom",
-      "file": "th3index_internal.h",
-      "family": "H3",
-      "returnType": {
-        "c": "GSERIALIZED *",
-        "canonical": "GSERIALIZED *"
-      },
-      "params": [
-        {
-          "name": "cell",
-          "cType": "uint64_t",
-          "canonical": "uint64_t"
-        }
-      ],
-      "api": "internal",
-      "category": "conversion",
-      "network": {
-        "exposable": false,
-        "method": null,
-        "reason": "internal; no-decoder:uint64_t"
-      },
-      "wire": {
-        "params": [
-          {
-            "name": "cell",
-            "kind": "unsupported"
-          }
-        ],
-        "result": {
-          "kind": "serialized",
-          "cType": "GSERIALIZED *",
-          "encode": "geo_as_ewkt",
-          "encode_aux": [
-            {
-              "name": "precision",
-              "kind": "integer",
-              "default": 15
-            }
-          ],
-          "encodings": [
-            "mfjson",
-            "text"
-          ]
         }
       }
     },
@@ -253098,6 +252953,53 @@
       }
     },
     {
+      "name": "quadbin_to_set",
+      "file": "meos_quadbin.h",
+      "family": "QUADBIN",
+      "returnType": {
+        "c": "Set *",
+        "canonical": "struct Set *"
+      },
+      "params": [
+        {
+          "name": "cell",
+          "cType": "uint64_t",
+          "canonical": "uint64_t"
+        }
+      ],
+      "api": "internal",
+      "category": "conversion",
+      "network": {
+        "exposable": false,
+        "method": null,
+        "reason": "internal; no-decoder:uint64_t"
+      },
+      "wire": {
+        "params": [
+          {
+            "name": "cell",
+            "kind": "unsupported"
+          }
+        ],
+        "result": {
+          "kind": "serialized",
+          "cType": "struct Set *",
+          "encode": "set_out",
+          "encode_aux": [
+            {
+              "name": "maxdd",
+              "kind": "integer",
+              "default": 15
+            }
+          ],
+          "encodings": [
+            "text",
+            "wkb"
+          ]
+        }
+      }
+    },
+    {
       "name": "tbigint_to_tquadbin",
       "file": "meos_quadbin.h",
       "family": "QUADBIN",
@@ -269255,6 +269157,54 @@
         "result": {
           "kind": "json",
           "json": "boolean"
+        }
+      }
+    },
+    {
+      "name": "s2cell_to_set",
+      "file": "meos_s2cell.h",
+      "family": "CORE",
+      "returnType": {
+        "c": "Set *",
+        "canonical": "struct Set *"
+      },
+      "params": [
+        {
+          "name": "cell",
+          "cType": "S2CellId",
+          "canonical": "int"
+        }
+      ],
+      "api": "internal",
+      "category": "conversion",
+      "network": {
+        "exposable": false,
+        "method": null,
+        "reason": "internal"
+      },
+      "wire": {
+        "params": [
+          {
+            "name": "cell",
+            "kind": "json",
+            "json": "integer"
+          }
+        ],
+        "result": {
+          "kind": "serialized",
+          "cType": "struct Set *",
+          "encode": "set_out",
+          "encode_aux": [
+            {
+              "name": "maxdd",
+              "kind": "integer",
+              "default": 15
+            }
+          ],
+          "encodings": [
+            "text",
+            "wkb"
+          ]
         }
       }
     },
@@ -311955,72 +311905,6 @@
       }
     },
     {
-      "name": "basetype_in",
-      "file": "type_util.h",
-      "family": "CORE",
-      "returnType": {
-        "c": "bool",
-        "canonical": "bool"
-      },
-      "params": [
-        {
-          "name": "str",
-          "cType": "const char *",
-          "canonical": "const char *"
-        },
-        {
-          "name": "type",
-          "cType": "MeosType",
-          "canonical": "MeosType"
-        },
-        {
-          "name": "end",
-          "cType": "bool",
-          "canonical": "bool"
-        },
-        {
-          "name": "result",
-          "cType": "Datum *",
-          "canonical": "Datum *"
-        }
-      ],
-      "api": "internal",
-      "category": "io",
-      "network": {
-        "exposable": false,
-        "method": null,
-        "reason": "internal; no-decoder:Datum"
-      },
-      "wire": {
-        "params": [
-          {
-            "name": "str",
-            "kind": "json",
-            "json": "string"
-          },
-          {
-            "name": "type",
-            "kind": "json",
-            "json": "string",
-            "enum": "MeosType"
-          },
-          {
-            "name": "end",
-            "kind": "json",
-            "json": "boolean"
-          },
-          {
-            "name": "result",
-            "kind": "unsupported"
-          }
-        ],
-        "result": {
-          "kind": "json",
-          "json": "boolean"
-        }
-      }
-    },
-    {
       "name": "basetype_out",
       "file": "type_util.h",
       "family": "CORE",
@@ -319633,12 +319517,12 @@
     "categoryCounts": {
       "lifecycle": 88,
       "index": 23,
-      "transformation": 1844,
-      "accessor": 337,
+      "transformation": 1838,
+      "accessor": 339,
       "predicate": 1790,
       "io": 330,
       "constructor": 106,
-      "conversion": 381,
+      "conversion": 385,
       "setop": 173,
       "aggregate": 103
     },
@@ -323781,18 +323665,6 @@
             "via": "direct"
           }
         ],
-        "h3_cell_to_geom": [
-          {
-            "code": "MEOS_ERR_INTERNAL_TYPE_ERROR",
-            "via": "direct"
-          }
-        ],
-        "h3_cell_to_geompoint": [
-          {
-            "code": "MEOS_ERR_INTERNAL_TYPE_ERROR",
-            "via": "direct"
-          }
-        ],
         "h3_cell_to_local_ij_meos": [
           {
             "code": "MEOS_ERR_INTERNAL_TYPE_ERROR",
@@ -323879,6 +323751,38 @@
           {
             "code": "MEOS_ERR_INTERNAL_TYPE_ERROR",
             "via": "direct"
+          }
+        ],
+        "h3index_cell_area": [
+          {
+            "code": "MEOS_ERR_INVALID_ARG_VALUE",
+            "via": "ensure",
+            "through": "ensure_h3index_cell"
+          }
+        ],
+        "h3index_cell_to_boundary": [
+          {
+            "code": "MEOS_ERR_INTERNAL_TYPE_ERROR",
+            "via": "direct"
+          }
+        ],
+        "h3index_cell_to_parent": [
+          {
+            "code": "MEOS_ERR_INVALID_ARG_VALUE",
+            "via": "direct"
+          }
+        ],
+        "h3index_cell_to_point": [
+          {
+            "code": "MEOS_ERR_INTERNAL_TYPE_ERROR",
+            "via": "direct"
+          }
+        ],
+        "h3index_get_resolution": [
+          {
+            "code": "MEOS_ERR_INVALID_ARG_VALUE",
+            "via": "ensure",
+            "through": "ensure_h3index_cell"
           }
         ],
         "int_extent_transfn": [
@@ -326246,6 +326150,12 @@
             "through": "ensure_tnumber_type"
           }
         ],
+        "tnumberinst_abs": [
+          {
+            "code": "MEOS_ERR_VALUE_OUT_OF_RANGE",
+            "via": "direct"
+          }
+        ],
         "tpcbox_extent_transfn": [
           {
             "code": "MEOS_ERR_INVALID_ARG_VALUE",
@@ -326738,7 +326648,7 @@
           }
         ]
       },
-      "raisesCount": 674
+      "raisesCount": 678
     },
     "scope": {
       "inScopeTypeFamilies": [
@@ -336603,27 +336513,11 @@
             ]
           },
           {
-            "function": "tgeogpoint_great_circle_distance_km",
+            "function": "tgeogpoint_great_circle_distance",
             "role": "accessor",
             "scope": "exact",
-            "backing": "tgeogpoint_great_circle_distance_km",
-            "ooName": "greatCircleDistanceKm",
-            "ooExclude": true
-          },
-          {
-            "function": "tgeogpoint_great_circle_distance_m",
-            "role": "accessor",
-            "scope": "exact",
-            "backing": "tgeogpoint_great_circle_distance_m",
-            "ooName": "greatCircleDistanceM",
-            "ooExclude": true
-          },
-          {
-            "function": "tgeogpoint_great_circle_distance_rads",
-            "role": "accessor",
-            "scope": "exact",
-            "backing": "tgeogpoint_great_circle_distance_rads",
-            "ooName": "greatCircleDistanceRads",
+            "backing": "tgeogpoint_great_circle_distance",
+            "ooName": "greatCircleDistance",
             "ooExclude": true
           }
         ]
@@ -352611,6 +352505,10 @@
         "class": null,
         "reason": "no-prefix-match (operator/base-helper/plumbing)"
       },
+      "basetype_in": {
+        "class": null,
+        "reason": "no-prefix-match (operator/base-helper/plumbing)"
+      },
       "datum_ceil": {
         "class": null,
         "reason": "no-prefix-match (operator/base-helper/plumbing)"
@@ -357837,6 +357735,26 @@
         "class": null,
         "reason": "no-prefix-match (operator/base-helper/plumbing)"
       },
+      "h3index_get_resolution": {
+        "class": null,
+        "reason": "no-prefix-match (operator/base-helper/plumbing)"
+      },
+      "h3index_cell_to_parent": {
+        "class": null,
+        "reason": "no-prefix-match (operator/base-helper/plumbing)"
+      },
+      "h3index_cell_to_point": {
+        "class": null,
+        "reason": "no-prefix-match (operator/base-helper/plumbing)"
+      },
+      "h3index_cell_to_boundary": {
+        "class": null,
+        "reason": "no-prefix-match (operator/base-helper/plumbing)"
+      },
+      "h3index_cell_area": {
+        "class": null,
+        "reason": "no-prefix-match (operator/base-helper/plumbing)"
+      },
       "th3index_in": {
         "class": null,
         "reason": "no-prefix-match (operator/base-helper/plumbing)"
@@ -358029,6 +357947,10 @@
         "class": null,
         "reason": "no-prefix-match (operator/base-helper/plumbing)"
       },
+      "h3index_to_set": {
+        "class": null,
+        "reason": "no-prefix-match (operator/base-helper/plumbing)"
+      },
       "geo_to_h3index_cell": {
         "class": null,
         "reason": "no-prefix-match (operator/base-helper/plumbing)"
@@ -358101,49 +358023,17 @@
         "class": null,
         "reason": "no-prefix-match (operator/base-helper/plumbing)"
       },
-      "th3index_cell_area_km2": {
+      "th3index_edge_length": {
         "class": null,
         "reason": "no-prefix-match (operator/base-helper/plumbing)"
       },
-      "th3index_cell_area_rads2": {
-        "class": null,
-        "reason": "no-prefix-match (operator/base-helper/plumbing)"
-      },
-      "th3index_edge_length_km": {
-        "class": null,
-        "reason": "no-prefix-match (operator/base-helper/plumbing)"
-      },
-      "th3index_edge_length_m": {
-        "class": null,
-        "reason": "no-prefix-match (operator/base-helper/plumbing)"
-      },
-      "th3index_edge_length_rads": {
-        "class": null,
-        "reason": "no-prefix-match (operator/base-helper/plumbing)"
-      },
-      "tgeogpoint_great_circle_distance_km": {
+      "tgeogpoint_great_circle_distance": {
         "class": "TGeogPoint",
         "scope": "exact",
         "axis": "typeFamily",
         "matchedPrefix": "tgeogpoint",
         "via": "prefix",
-        "backing": "tgeogpoint_great_circle_distance_km"
-      },
-      "tgeogpoint_great_circle_distance_m": {
-        "class": "TGeogPoint",
-        "scope": "exact",
-        "axis": "typeFamily",
-        "matchedPrefix": "tgeogpoint",
-        "via": "prefix",
-        "backing": "tgeogpoint_great_circle_distance_m"
-      },
-      "tgeogpoint_great_circle_distance_rads": {
-        "class": "TGeogPoint",
-        "scope": "exact",
-        "axis": "typeFamily",
-        "matchedPrefix": "tgeogpoint",
-        "via": "prefix",
-        "backing": "tgeogpoint_great_circle_distance_rads"
+        "backing": "tgeogpoint_great_circle_distance"
       },
       "meos_h3index_in": {
         "class": null,
@@ -358270,14 +358160,6 @@
         "reason": "no-prefix-match (operator/base-helper/plumbing)"
       },
       "th3indexseq_expand_stbox": {
-        "class": null,
-        "reason": "no-prefix-match (operator/base-helper/plumbing)"
-      },
-      "h3_cell_to_geompoint": {
-        "class": null,
-        "reason": "no-prefix-match (operator/base-helper/plumbing)"
-      },
-      "h3_cell_to_geom": {
         "class": null,
         "reason": "no-prefix-match (operator/base-helper/plumbing)"
       },
@@ -363135,6 +363017,10 @@
         "class": null,
         "reason": "no-prefix-match (operator/base-helper/plumbing)"
       },
+      "quadbin_to_set": {
+        "class": null,
+        "reason": "no-prefix-match (operator/base-helper/plumbing)"
+      },
       "tbigint_to_tquadbin": {
         "class": "TBigint",
         "scope": "exact",
@@ -364500,6 +364386,10 @@
         "reason": "no-prefix-match (operator/base-helper/plumbing)"
       },
       "ts2cell_value_at_timestamptz": {
+        "class": null,
+        "reason": "no-prefix-match (operator/base-helper/plumbing)"
+      },
+      "s2cell_to_set": {
         "class": null,
         "reason": "no-prefix-match (operator/base-helper/plumbing)"
       },
@@ -367965,10 +367855,6 @@
         "class": null,
         "reason": "no-prefix-match (operator/base-helper/plumbing)"
       },
-      "basetype_in": {
-        "class": null,
-        "reason": "no-prefix-match (operator/base-helper/plumbing)"
-      },
       "basetype_out": {
         "class": null,
         "reason": "no-prefix-match (operator/base-helper/plumbing)"
@@ -368168,9 +368054,9 @@
         "TTextSeqSet"
       ],
       "classesWithMethods": 91,
-      "functionsClassified": 1558,
+      "functionsClassified": 1556,
       "functionsTotal": 5175,
-      "unclassified": 3617,
+      "unclassified": 3619,
       "unclassifiedNames": [
         "_addeye",
         "_addmat",
@@ -369660,8 +369546,6 @@
         "h3_cell_to_center_child_next_meos",
         "h3_cell_to_child_pos_meos",
         "h3_cell_to_children",
-        "h3_cell_to_geom",
-        "h3_cell_to_geompoint",
         "h3_cell_to_local_ij_meos",
         "h3_cell_to_parent_meos",
         "h3_cell_to_parent_next_meos",
@@ -369699,11 +369583,16 @@
         "h3_vertex_to_gs_point",
         "h3index_as_hexwkb",
         "h3index_as_wkb",
+        "h3index_cell_area",
+        "h3index_cell_to_boundary",
+        "h3index_cell_to_parent",
+        "h3index_cell_to_point",
         "h3index_cmp",
         "h3index_eq",
         "h3index_from_hexwkb",
         "h3index_from_wkb",
         "h3index_ge",
+        "h3index_get_resolution",
         "h3index_gt",
         "h3index_hash",
         "h3index_in",
@@ -369713,6 +369602,7 @@
         "h3index_out",
         "h3index_set_stbox",
         "h3index_timestamptz_to_stbox",
+        "h3index_to_set",
         "h3index_to_stbox",
         "h3index_tstzspan_to_stbox",
         "h3indexarr_set_stbox",
@@ -370732,6 +370622,7 @@
         "quadbin_string_to_index",
         "quadbin_tile_to_cell",
         "quadbin_timestamptz_to_stbox",
+        "quadbin_to_set",
         "quadbin_to_stbox",
         "quadbin_tstzspan_to_stbox",
         "quadbinarr_set_stbox",
@@ -370903,6 +370794,7 @@
         "s2cell_set_stbox",
         "s2cell_timestamptz_to_stbox",
         "s2cell_to_face_ij",
+        "s2cell_to_set",
         "s2cell_to_stbox",
         "s2cell_token_to_cell",
         "s2cell_tstzspan_to_stbox",
@@ -371302,8 +371194,6 @@
         "tgt_tint_int",
         "tgt_ttext_text",
         "th3index_are_neighbor_cells",
-        "th3index_cell_area_km2",
-        "th3index_cell_area_rads2",
         "th3index_cell_to_center_child",
         "th3index_cell_to_center_child_next",
         "th3index_cell_to_child_pos",
@@ -371313,9 +371203,7 @@
         "th3index_cells_to_directed_edge",
         "th3index_child_pos_to_cell",
         "th3index_directed_edge_to_boundary",
-        "th3index_edge_length_km",
-        "th3index_edge_length_m",
-        "th3index_edge_length_rads",
+        "th3index_edge_length",
         "th3index_end_value",
         "th3index_get_base_cell_number",
         "th3index_get_directed_edge_destination",
@@ -371792,12 +371680,12 @@
       ],
       "coveragePct": 30.1,
       "errorStatus": "scanned",
-      "ooMethods": 1558,
-      "ooExcluded": 1558
+      "ooMethods": 1556,
+      "ooExcluded": 1556
     }
   },
   "typeRelations": {
     "byBase": {}
   },
-  "sourceCommit": "10aad4dd0011209a1b63ab2113c554415b1ed195"
+  "sourceCommit": "b7a0bf712dc82e103296929e87f829270b330492"
 }
